@@ -1,5 +1,5 @@
 # Используем базовый образ
-FROM eclipse-temurin:17-jdk-alpine
+FROM eclipse-temurin:17-jdk-alpine AS GRADLE_BUILD
 
 # Рабочая директория
 WORKDIR /app
@@ -18,7 +18,7 @@ RUN ./gradlew clean build -x test
 # Многоступенчатая сборка (опционально)
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
-COPY --from=0 /app/build/libs/docker-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=GRADLE_BUILD /app/build/libs/docker-0.0.1-SNAPSHOT.jar app.jar
 
 # Открываем порт
 EXPOSE 8080
