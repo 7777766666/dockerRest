@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: docker
+
+# ???????????
+logging:
+  level:
+    tesla.docker: DEBUG
+    org.springframework.web: DEBUG
+
+server:
+  port: 8888
