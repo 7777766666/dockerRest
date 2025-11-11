@@ -21,8 +21,7 @@ WORKDIR /app
 COPY --from=GRADLE_BUILD /app/build/libs/docker-0.0.1-SNAPSHOT.jar app.jar
 
 # Открываем порт
-EXPOSE 8080
-EXPOSE 5000
+EXPOSE 8888
 
 # Команда запуска
 CMD ["java", "-jar", "app.jar"]
