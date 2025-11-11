@@ -1,0 +1,72 @@
+# kubectl apply -f kubernetes-pod.yml     разворачиваем этой командой через докер
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docker-java
+  labels:
+    app: docker-java
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: docker-java
+  template:
+    metadata:
+      labels:
+        app: docker-java
+    spec:
+      containers:
+        - name: docker-java
+          image: docker-java:latest
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1024Mi"
+          ports:
+            - containerPort: 8888
+              name: http
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8888
+            initialDelaySeconds: 15
+            timeoutSeconds: 2
+            periodSeconds: 20
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8888
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+            periodSeconds: 5
+            failureThreshold: 3
+            successThreshold: 1
+
+---
+# docker-java service
+apiVersion: v1
+kind: Service
+metadata:
+  name: docker-java-service
+  labels:
+    app: docker-java
+spec:
+  type: NodePort
+  selector:
+    app: docker-java
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8888
+      targetPort: 8888
+      nodePort: 30080
+
+
+
