@@ -3,9 +3,11 @@ package tesla.docker.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+import tesla.docker.model.QuickSort;
 import tesla.docker.model.User;
 import tesla.docker.service.DockerService;
 
+import java.lang.reflect.Array;
 import java.util.UUID;
 
 @RestController("/")
@@ -75,5 +77,30 @@ public class DockerController {
     ) {
         log.info("Get in controller from http://localhost:8888/sum?x={}&y={}", x, y);
         return dockerService.sum2(x, y);
+    }
+
+    @PostMapping("sort")
+    public Integer[] quickSort(@RequestBody QuickSort quickSort) {
+        log.info("Start quick sort");
+        return dockerService.quickSort(quickSort);
+    }
+
+    @GetMapping("binar")
+    public Integer binar() {
+        log.info("Start binary search in Controller or index, where must be number");
+        Integer[] arr = new Integer[]{0, 1, 2, 4, 5, 6, 7, 8, 12, 76, 7632, 888888};
+        Integer target = 888888;
+
+        return dockerService.binarSearch(arr, target);
+    }
+
+    @GetMapping("binarNull")
+    public Integer binarNull() {
+        log.info("Start binary search in Controller or Integer.MIN_VALUE");
+        Integer[] arr = new Integer[]{0, 1, 2, 4, 5, 6, 7, 8, 12, 76, 7632, 888888};
+//        Integer[] arr = new Integer[]{1, 2, 4};
+        Integer target = 333;
+
+        return dockerService.binarSearchOrNull(arr, target);
     }
 }
