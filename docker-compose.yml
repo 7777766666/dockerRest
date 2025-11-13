@@ -116,6 +116,29 @@ services:
     networks:
       - app-network
 
+  # Postgres
+  postgres:
+    image: postgres
+    container_name: postgres
+    environment:
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: myapp
+      POSTGRES_USER: postgres          # Создать конкретного пользователя
+      POSTGRES_HOST_AUTH_METHOD: trust  # Отключить аутентификацию (только для разработки!)
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    networks:
+      - app-network
+
+# Определение томов
+volumes:
+  postgres_data: # Именованный том для данных PostgreSQL
+
+# Определение сетей
 networks:
   app-network:
     driver: bridge
+
+
