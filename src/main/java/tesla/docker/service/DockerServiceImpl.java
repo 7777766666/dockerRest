@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import tesla.docker.model.QuickSort;
-import tesla.docker.model.User;
+import tesla.docker.entity.User;
 import tesla.docker.util.AlgoUtil;
 
 @Service

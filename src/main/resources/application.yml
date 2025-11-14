@@ -1,23 +1,55 @@
 spring:
   application:
     name: docker
+  main:
+    allow-bean-definition-overriding: true
+  datasource:
+    url: jdbc:postgresql://postgres:5432/myapp
+    username: postgres
+    password: 123456
+
+  jpa:
+    hibernate:
+#      ddl-auto: validate  # Liquibase управляет схемой
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  liquibase:
+    enabled: false
+#    change-log: classpath:/db/changelog/db.changelog-master.xml
+
 
 # Логирование
 logging:
   level:
     tesla.docker: DEBUG
-    org.springframework.web: INFO
+    org.springframework.web: DEBUG
+    org.springframework.jdbc: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
 server:
   port: 8888
+  address: 0.0.0.0  # ⚠️ Это позволит принимать подключения с хоста
 
+
+# Отключить актуатор если не нужен
 management:
   endpoints:
     web:
       exposure:
-        include: '*'
-  endpoint:
-    health:
-      probes:
-        enabled: true
-      show-details: always
+        include: health,info
+
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: '*'
+#  endpoint:
+#    health:
+#      probes:
+#        enabled: true
+#      show-details: always

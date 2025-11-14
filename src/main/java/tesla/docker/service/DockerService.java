@@ -1,7 +1,7 @@
 package tesla.docker.service;
 
 import tesla.docker.model.QuickSort;
-import tesla.docker.model.User;
+import tesla.docker.entity.User;
 
 public interface DockerService {
     Integer sum2(Integer x, Integer y);

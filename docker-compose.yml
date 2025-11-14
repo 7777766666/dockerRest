@@ -1,16 +1,18 @@
 services:
   # Spring boot
   docker-java:
-    build: .  # Собирает образ из Dockerfile
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: docker-java
     ports:
-      - "8888:8888"
+      - "8889:8888"  # ⚠️ Убедитесь что есть эта строка
     environment:
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka1:9092, kafka2:9092, kafka3:9092
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/myapp
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 123456
     depends_on:
-      - kafka1
-      - kafka2
-      - kafka3
+      - postgres
     networks:
       - app-network
 
@@ -115,6 +117,25 @@ services:
       - kafka3
     networks:
       - app-network
+
+  # PostgreSQL 18+ с последним образом
+  postgres:
+    image: postgres:latest  # PostgreSQL 18+
+    container_name: postgres
+    environment:
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: myapp
+      POSTGRES_USER: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql  # Важно для PostgreSQL 18+
+    networks:
+      - app-network
+
+# Определение томов
+volumes:
+  postgres_data:  # Том для данных PostgreSQL
 
 networks:
   app-network:

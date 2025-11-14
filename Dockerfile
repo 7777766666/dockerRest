@@ -1,27 +1,24 @@
-# Используем базовый образ
-FROM eclipse-temurin:17-jdk-alpine AS GRADLE_BUILD
+# Multi-stage build с Spring Boot
+FROM eclipse-temurin:17-jdk-alpine as builder
 
-# Рабочая директория
 WORKDIR /app
 
-# Копируем файлы
-COPY gradle/ gradle/
-COPY gradlew .
-COPY build.gradle.kts .
-COPY settings.gradle.kts .
-COPY src/ src/
+# Копируем все файлы проекта
+COPY . .
 
-# Даем права и собираем
-RUN chmod +x ./gradlew
-RUN ./gradlew clean build -x test
+# Собираем приложение с Spring Boot plugin
+RUN ./gradlew clean build -x test --no-daemon
 
-# Многоступенчатая сборка (опционально)
+# Финальный образ
 FROM eclipse-temurin:17-jre-alpine
+
 WORKDIR /app
-COPY --from=GRADLE_BUILD /app/build/libs/docker-0.0.1-SNAPSHOT.jar app.jar
 
-# Открываем порт
-EXPOSE 8888
+# Копируем JAR из стадии builder
+COPY --from=builder /app/build/libs/*.jar app.jar
 
-# Команда запуска
-CMD ["java", "-jar", "app.jar"]
+# Проверяем что файл скопировался и исполняемый
+RUN ls -la /app/ && \
+    java -jar /app/app.jar --version || echo "Checking JAR..."
+
+ENTRYPOINT ["java", "-jar", "app.jar"]

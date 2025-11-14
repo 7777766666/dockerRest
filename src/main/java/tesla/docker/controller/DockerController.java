@@ -4,10 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import tesla.docker.model.QuickSort;
-import tesla.docker.model.User;
+import tesla.docker.entity.User;
 import tesla.docker.service.DockerService;
 
-import java.lang.reflect.Array;
 import java.util.UUID;
 
 @RestController("/")

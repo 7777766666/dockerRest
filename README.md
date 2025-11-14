@@ -7,6 +7,6 @@ docker exec -it kafka-broker1 /opt/kafka/bin/kafka-console-producer.sh --topic t
 Прочитать сообщения из кафки:
 docker exec -it kafka-broker1 /opt/kafka/bin/kafka-console-consumer.sh --topic test-topic --from-beginning --bootstrap-server kafka1:9092
 
-Доступ к сервисам:
+docker composeДоступ к сервисам:
 http://localhost:8888/ Приложение
 http://localhost:8080/ Кафка UI
